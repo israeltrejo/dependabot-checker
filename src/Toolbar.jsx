@@ -1,9 +1,11 @@
-const FILTERS = ["all", "enabled", "disabled"];
+const FILTERS = ["all", "alertsEnabled", "alertsDisabled", "configEnabled", "configDisabled"];
 
 const FILTER_LABELS = {
     all: "All",
-    enabled: "✅ Alerts enabled",
-    disabled: "❌ Alerts disabled",
+    alertsEnabled: "✅ Alerts enabled",
+    alertsDisabled: "❌ Alerts disabled",
+    configEnabled: "✅ Config enabled",
+    configDisabled: "❌ Config disabled",
 };
 
 export default function Toolbar({ currentFilter, setFilter, downloadAction, repositories, organization }) {

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { fetchAllRepos, checkDependabot, exportCSV } from "./requests";
+import { fetchAllRepos, checkDependabotAlerts, exportCSV } from "./requests";
 import Toggle from "./Toggle";
 import SummaryDashboard from "./SummaryDashboard";
 import Toolbar from "./Toolbar";
@@ -31,15 +31,16 @@ export default function App() {
       const results = [];
       for (let i = 0; i < allRepos.length; i++) {
         const repo = allRepos[i];
-        const dep = await checkDependabot(org, repo.name, token);
+        const dep = await checkDependabotAlerts(org, repo.name, token);
         results.push({
           name: repo.name,
           private: repo.private,
           archived: repo.archived,
           url: repo.html_url,
           config: dep.config,
-          alerts: dep.alerts,
+          alerts: dep.alertsEnabled,
           description: repo.description,
+          alertsCount: dep.counts,
           language: repo.language,
           updated_at: new Date(repo.updated_at).toLocaleDateString(),
           created_at: new Date(repo.created_at).toLocaleDateString(),
@@ -56,17 +57,21 @@ export default function App() {
   }
 
   const filtered = repos.filter(r => {
-    if (filter === "enabled") return r.config || r.alerts;
-    if (filter === "disabled") return !r.config && !r.alerts;
+    if (filter === "alertsEnabled") return r.alerts;
+    if (filter === "alertsDisabled") return !r.alerts;
+    if (filter === "configEnabled") return r.config;
+    if (filter === "configDisabled") return !r.config;
     return true;
   });
 
-  const enabledCount = repos.filter(r => r.config || r.alerts).length;
-  const disabledCount = repos.filter(r => !r.config && !r.alerts).length;
+  const alertsEnabledCount = repos.filter(r => r.alerts).length;
+  const alertsDisabledCount = repos.filter(r => !r.alerts).length;
+  const configEnabledCount = repos.filter(r => r.config).length;
+  const configDisabledCount = repos.filter(r => !r.config).length;
 
   return (
-    <div className={`${dark ? "dark" : ""} w-full p-6 min-h-screen bg-slate-200 dark:bg-slate-900`}>
-      <div className="font-sans mx-auto p-6 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 bg-slate-50 dark:text-slate-200 dark:bg-slate-950 min-h-screen">
+    <div className={`${dark ? "dark" : ""} w-full p-6 min-h-screen bg-slate-200 dark:bg-slate-900 overflow-y-hidden`}>
+      <div className="font-sans mx-auto p-6 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 bg-slate-50 dark:text-slate-200 dark:bg-slate-950 max-h-screen overflow-y-hidden">
 
         {/* Header */}
         <div className="flex items-start justify-between mb-1">
@@ -93,13 +98,20 @@ export default function App() {
         )}
 
         {repos.length > 0 && (
-          <>
-            <SummaryDashboard total={repos.length} enabled={enabledCount} disabled={disabledCount} />
+          <div className="flex flex-col gap-4 h-full overflow-y-hidden">
+            <SummaryDashboard 
+              total={repos.length} 
+              alertsEnabled={alertsEnabledCount} 
+              alertsDisabled={alertsDisabledCount} 
+              configEnabled={configEnabledCount} 
+              configDisabled={configDisabledCount} 
+              repos={repos}
+            />
 
             <Toolbar currentFilter={filter} setFilter={setFilter} downloadAction={exportCSV} repositories={repos} organization={org} />
 
             <ContentTable items={filtered} />
-          </>
+          </div>
         )}
       </div>
     </div>
