@@ -6,6 +6,7 @@ import Toolbar from "./Toolbar";
 import ContentTable from "./ContentTable";
 import ProgressBar from "./ProgressBar";
 import Form from "./Form";
+import InfoContent from "./InfoContent";
 
 const STATUS = { idle: "idle", loading: "loading", done: "done", error: "error" };
 
@@ -74,17 +75,19 @@ export default function App() {
       <div className="font-sans mx-auto p-6 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 bg-slate-50 dark:text-slate-200 dark:bg-slate-950 max-h-screen overflow-y-hidden">
 
         {/* Header */}
-        <div className="flex items-start justify-between mb-1">
-          <h2 className="text-2xl font-semibold">🔍 Dependabot Checker</h2>
-          <Toggle 
+        <div className="flex items-center justify-between mb-2 gap-4">
+          <div className="flex flex-col gap-2">
+            <h2 className="text-2xl font-semibold">🔍 Dependabot Checker</h2>
+          </div>
+          <Toggle
+            className="whitespace-nowrap"
             value={dark} 
             onChange={() => setDark(d => !d)} 
             label="Dark Mode" 
           />
         </div>
-        <p className="text-slate-500 dark:text-slate-400 mb-5 text-sm">
-          Verify if your GitHub repositories have Dependabot enabled.
-        </p>
+        <InfoContent />
+
 
         <Form onSubmit={run} organization={org} token={token} setOrganization={setOrg} setToken={setToken} disabled={status === STATUS.loading || !org || !token} />
 
