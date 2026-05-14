@@ -7,8 +7,8 @@ const HEADERS = ["Repository", "Description", "Visibility", "Private", "Programm
 
 export default function ContentTable({ items }) {
     return (
-        <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800 max-h-[calc(100vh-420px)] overflow-y-auto [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-500">
-            <table className="w-full border-collapse text-sm">
+        <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800 max-h-[calc(100vh-462px)] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-500">
+            <table className="w-full border-collapse text-sm overflow-y-auto">
                 <thead className="sticky top-0">
                     <tr className="bg-slate-100 dark:bg-slate-800">
                         {HEADERS.map(header => (

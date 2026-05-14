@@ -71,50 +71,53 @@ export default function App() {
   const configDisabledCount = repos.filter(r => !r.config).length;
 
   return (
-    <div className={`${dark ? "dark" : ""} w-full p-6 min-h-screen bg-slate-200 dark:bg-slate-900 overflow-y-hidden`}>
-      <div className="font-sans mx-auto p-6 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 bg-slate-50 dark:text-slate-200 dark:bg-slate-950 max-h-screen overflow-y-hidden">
-
-        {/* Header */}
-        <div className="flex items-center justify-between mb-2 gap-4">
-          <div className="flex flex-col gap-2">
-            <h2 className="text-2xl font-semibold">🔍 Dependabot Checker</h2>
+    <div className={`${dark ? "dark" : ""} w-full p-6 min-h-screen bg-slate-200 dark:bg-slate-900 overflow-y-hidden min-h-screen max-h-screen`}>
+      <div className="font-sans mx-auto p-6 border border-slate-200 dark:border-slate-800 rounded-lg text-slate-800 bg-slate-50 dark:text-slate-200 dark:bg-slate-950 max-h-[calc(100vh-48px)] overflow-y-hidden h-full">
+        <div className="flex flex-col gap-4 h-full overflow-y-hidden">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-2 gap-4">
+            <div className="flex flex-col gap-2">
+              <h2 className="text-2xl font-semibold">🔍 Dependabot Checker</h2>
+            </div>
+            <Toggle
+              className="whitespace-nowrap"
+              value={dark}
+              onChange={() => setDark(d => !d)}
+              label="Dark Mode"
+            />
           </div>
-          <Toggle
-            className="whitespace-nowrap"
-            value={dark} 
-            onChange={() => setDark(d => !d)} 
-            label="Dark Mode" 
-          />
+          <InfoContent />
+
+
+          <Form onSubmit={run} organization={org} token={token} setOrganization={setOrg} setToken={setToken} disabled={status === STATUS.loading || !org || !token} />
+
+          <ProgressBar enabled={status === STATUS.loading} total={progress.total} current={progress.current} />
+
+          {/* Error */}
+          {status === STATUS.error && (
+            <div className="bg-red-50 border border-red-400 dark:bg-red-950 dark:border-red-500 rounded-lg px-3.5 py-2.5 mb-4 text-red-600 dark:text-red-300 text-sm">
+              ❌ {error}
+            </div>
+          )}
+
+          {repos.length > 0 && (
+            <div className="flex flex-col gap-2 mb-2">
+              <SummaryDashboard
+                total={repos.length}
+                alertsEnabled={alertsEnabledCount}
+                alertsDisabled={alertsDisabledCount}
+                configEnabled={configEnabledCount}
+                configDisabled={configDisabledCount}
+                repos={repos}
+              />
+
+              <Toolbar currentFilter={filter} setFilter={setFilter} downloadAction={exportCSV} repositories={repos} organization={org} />
+            </div>
+          )}
         </div>
-        <InfoContent />
-
-
-        <Form onSubmit={run} organization={org} token={token} setOrganization={setOrg} setToken={setToken} disabled={status === STATUS.loading || !org || !token} />
-
-        <ProgressBar enabled={status === STATUS.loading} total={progress.total} current={progress.current} />
-
-        {/* Error */}
-        {status === STATUS.error && (
-          <div className="bg-red-50 border border-red-400 dark:bg-red-950 dark:border-red-500 rounded-lg px-3.5 py-2.5 mb-4 text-red-600 dark:text-red-300 text-sm">
-            ❌ {error}
-          </div>
-        )}
 
         {repos.length > 0 && (
-          <div className="flex flex-col gap-4 h-full overflow-y-hidden">
-            <SummaryDashboard 
-              total={repos.length} 
-              alertsEnabled={alertsEnabledCount} 
-              alertsDisabled={alertsDisabledCount} 
-              configEnabled={configEnabledCount} 
-              configDisabled={configDisabledCount} 
-              repos={repos}
-            />
-
-            <Toolbar currentFilter={filter} setFilter={setFilter} downloadAction={exportCSV} repositories={repos} organization={org} />
-
-            <ContentTable items={filtered} />
-          </div>
+          <ContentTable items={filtered} />
         )}
       </div>
     </div>
