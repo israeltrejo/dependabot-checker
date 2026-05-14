@@ -117,7 +117,7 @@ export default function App() {
         </div>
 
         {repos.length > 0 && (
-          <ContentTable items={filtered} />
+          <ContentTable items={filtered} loading={status === STATUS.loading} />
         )}
       </div>
     </div>

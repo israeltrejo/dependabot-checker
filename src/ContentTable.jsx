@@ -5,9 +5,11 @@ import AlertBadge from "./AlertBadge";
 
 const HEADERS = ["Repository", "Description", "Visibility", "Private", "Programming language", "Dependabot.yml config?", "Dependabot alerts enabled?", "Alerts count"];
 
-export default function ContentTable({ items }) {
+export default function ContentTable({ items, loading }) {
     return (
-        <div className="overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800 max-h-[calc(100vh-462px)] [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-500">
+        <div className={`
+            overflow-x-auto rounded-lg border border-slate-200 dark:border-slate-800 [&::-webkit-scrollbar]:w-2 [&::-webkit-scrollbar-track]:bg-slate-100 [&::-webkit-scrollbar-thumb]:bg-slate-500 ${loading ? "max-h-[calc(100vh-530px)]" : "max-h-[calc(100vh-462px)]"}
+        `}>
             <table className="w-full border-collapse text-sm overflow-y-auto">
                 <thead className="sticky top-0">
                     <tr className="bg-slate-100 dark:bg-slate-800">
