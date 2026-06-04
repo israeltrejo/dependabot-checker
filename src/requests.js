@@ -73,12 +73,12 @@ const escapeCSVField = (value) => {
 };
 
 export const exportCSV = (repositories, org) => {
-    const rows = [["Name", "URL", "Description", "Programming Language", "Updated At", "Created At", "Visibility", "Private", "Archived", "Dependabot.yml config", "Dependabot alerts enabled", "Alerts count"]];
+    const rows = [["Name", "URL", "Description", "Programming Language", "Updated At", "Created At", "Visibility", "Private", "Archived", "Dependabot.yml config", "Dependabot alerts enabled", "Alerts count", "Critical", "High", "Medium", "Low"]];
     repositories.forEach(repository => rows.push([
         repository.name, repository.url, repository.description, repository.language, 
         repository.updated_at, repository.created_at, repository.visibility, repository.private ? "YES" : "NO", 
         repository.archived ? "YES" : "NO", repository.config ? "YES" : "NO", repository.alerts ? "YES" : "NO", 
-        repository.alerts ? repository.alertsCount.total : "N/A"
+        repository.alerts ? repository.alertsCount.total : "N/A", repository.alertsCount.critical, repository.alertsCount.high, repository.alertsCount.medium, repository.alertsCount.low
     ]));
     const csv = rows.map(row => row.map(escapeCSVField).join(",")).join("\n");
     console.log('csv', csv);
